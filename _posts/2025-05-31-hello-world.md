@@ -6,3 +6,7 @@ tags: [chat]
 ---
 
 hello, world!
+
+ok, it seems that this file is ignored?
+
+still trying
