@@ -1,8 +1,8 @@
 ---
-title: Hello, world!
-date: 2025-05-31 19:40:00 +0800
-categories: [chat, nothing]
-tags: [chatting] 
+title: hello world!
+date: 2025-05-31 20:40:00 +0800
+categories: [chat, hello]
+tags: [chat]
 ---
 
-**Hello world!**
+hello, world!
