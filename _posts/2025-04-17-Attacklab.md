@@ -181,8 +181,8 @@ long add_xy(long x, long y)
 
 ```nasm
 0000000000401923 <add_xy>:
-  401923: 48 8d 04 37           lea    (%rdi,%rsi,1),%rax
-  401927: c3                    ret
+  401923: 48 8d 04 37           lea    (%rdi,%rsi,1),%rax
+  401927: c3                    ret
 ```
 
 或许我们可以想办法获取rsp的值和cookie字符串在栈上的偏移量，然后利用这个函数来得到字符串的绝对地址
