@@ -1,3 +1,9 @@
+---
+title: Attacklab
+date: 2025-04-17 17:36:40 +0800
+categories: [CS, ICS]
+tags: [CS, ICS, 安全]
+---
 ## Phase1
 phase1很简单，关键就是**用touch1的地址覆盖掉原来的返回地址**
 直接用objdump反汇编一下
